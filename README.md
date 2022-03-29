@@ -11,4 +11,4 @@
 | | |
 | | |
 | Ubiquiti Networks UniFi AC Pro AP UAP-AC-PRO (Patos WiFi x 4) | [link](https://www.mercadolibre.com.ar/access-point-exterior-access-point-interior-ubiquiti-networks-unifi-ac-pro-ap-uap-ac-pro-blanco/p/MLA6322228?product_trigger_id=MLA15996875&pdp_filters=category%3AMLA1700&applied_product_filters=MLA6322228&quantity=1)|
-|Switch Tp Link 24 Puertos Poe+ 250w Gigabit Y 4 Sfp para alimentación y conectividad de los AP|[Link] (https://articulo.mercadolibre.com.ar/MLA-928041546-switch-tp-link-24-puertos-poe-250w-gigabit-y-4-sfp-_JM#position=34&search_layout=grid&type=item&tracking_id=d1715a6b-3fef-404e-8621-fd226be26f28)|
+|Switch Tp Link 24 Puertos Poe+ 250w Gigabit Y 4 Sfp para alimentación y conectividad de los AP| [Link](https://articulo.mercadolibre.com.ar/MLA-928041546-switch-tp-link-24-puertos-poe-250w-gigabit-y-4-sfp-_JM#position=34&search_layout=grid&type=item&tracking_id=d1715a6b-3fef-404e-8621-fd226be26f28)|
