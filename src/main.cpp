@@ -1,54 +1,36 @@
 #include <WiFi.h>
-#include <DNSServer.h>
+#include <Arduino.h>
+#include <TaskScheduler.h>
+#include <Preferences.h>
 
-const byte DNS_PORT = 53;
-IPAddress apIP(192, 168, 1, 1);
-DNSServer dnsServer;
-WiFiServer server(80);
+Scheduler ts;
 
-String responseHTML = ""
-  "<!DOCTYPE html><html><head><title>CaptivePortal</title></head><body>"
-  "<h1>Hello World!</h1><p>This is a captive portal example. All requests will "
-  "be redirected here.</p></body></html>";
+void wifiScanCallback();
+
+Task wifiScan(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
 
 void setup() {
-  WiFi.disconnect();   //agrega a empezar con el wifi apagado, evitar estrellarse
-  WiFi.mode(WIFI_OFF); //agrega a empezar con el wifi apagado, evitar estrellarse
-  WiFi.mode(WIFI_AP);
-  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-  WiFi.softAP("DNSServer CaptivePortal example");
+  Serial.begin(115200);
+  delay(10);
+  WiFi.mode(WIFI_OFF);
+  delay(10);
 
-  // si DNSServer se inicia con "*" para el nombre de dominio, es la respuesta con
-  // dirección IP proporcionada a todos petición de DNS
-  dnsServer.start(DNS_PORT, "*", apIP);
-
-  server.begin();
 }
 
 void loop() {
-  dnsServer.processNextRequest();
-  WiFiClient client = server.available();   // escuchar para los clientes entrantes
+  ts.execute();
+}
 
-  if (client) {
-    String currentLine = "";
-    while (client.connected()) {
-      if (client.available()) {
-        char c = client.read();
-        if (c == '\n') {
-          if (currentLine.length() == 0) {
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
-            client.println();
-            client.print(responseHTML);
-            break;
-          } else {
-            currentLine = "";
-          }
-        } else if (c != '\r') {
-          currentLine += c;
-        }
-      }
-    }
-    client.stop();
+//70702145
+
+void wifiScanCallback() {
+  if (WiFi.getMode() == WIFI_OFF) WiFi.mode(WIFI_STA);
+  int n = WiFi.scanNetworks();
+
+  for (int i = 0; i < n; i++){
+    Serial.printf("%d %s %d %x\n",i,WiFi.SSID(i).c_str(),WiFi.RSSI(i),WiFi.encryptionType(i));
+
+
   }
+  Serial.printf("---\n");
 }
