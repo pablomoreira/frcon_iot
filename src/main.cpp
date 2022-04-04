@@ -4,10 +4,11 @@
 #include <Preferences.h>
 
 Scheduler ts;
-
+void autoConnectCallback();
 void wifiScanCallback();
 
 Task wifiScan(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
+Task autoConnect(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
 
 void setup() {
   Serial.begin(115200);
@@ -29,8 +30,6 @@ void wifiScanCallback() {
 
   for (int i = 0; i < n; i++){
     Serial.printf("%d %s %d %x\n",i,WiFi.SSID(i).c_str(),WiFi.RSSI(i),WiFi.encryptionType(i));
-
-
   }
   Serial.printf("---\n");
 }
