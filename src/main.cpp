@@ -2,10 +2,12 @@
 #include <Arduino.h>
 #include <TaskScheduler.h>
 #include <Preferences.h>
+#include <AutoCnt.h>
 
 Scheduler ts;
 void autoConnectCallback();
 void wifiScanCallback();
+AutoCnt autocnt("myap");
 
 Task wifiScan(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
 Task autoConnect(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
@@ -15,6 +17,7 @@ void setup() {
   delay(10);
   WiFi.mode(WIFI_OFF);
   delay(10);
+  autocnt.loop();
 
 }
 
