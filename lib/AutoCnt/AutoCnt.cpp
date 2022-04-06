@@ -11,7 +11,7 @@ AutoCnt::AutoCnt(String ssid) {
 }
 
 AutoCnt::~AutoCnt(void) {
-  // desctructor implementation here
+   this->_run = true;
 }
 
 void AutoCnt::loop(void){
