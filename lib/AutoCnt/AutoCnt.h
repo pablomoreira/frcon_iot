@@ -14,8 +14,9 @@ class AutoCnt {
         AutoCnt(String ssid);
         ~AutoCnt();
         void loop(void);
+        void begin();
     private:
-        IPAddress _apIP;
+        IPAddress* _apIP;
         DNSServer* _dnss;
         WiFiServer* _server;
 
