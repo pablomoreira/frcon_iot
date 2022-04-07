@@ -7,7 +7,8 @@
 Scheduler ts;
 void autoConnectCallback();
 void wifiScanCallback();
-AutoCnt autocnt();
+AutoCnt autocnt("Test");
+
 
 Task wifiScan(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
 Task autoConnect(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
