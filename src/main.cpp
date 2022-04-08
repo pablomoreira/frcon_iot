@@ -7,7 +7,7 @@
 Scheduler ts;
 void autoConnectCallback();
 void wifiScanCallback();
-AutoCnt autocnt("Test");
+AutoCnt autocnt;
 
 
 Task wifiScan(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
@@ -18,7 +18,7 @@ void setup() {
   delay(10);
 
   autocnt.begin();
-  autocnt.loop();
+
 }
 
 void loop() {
