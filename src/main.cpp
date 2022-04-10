@@ -19,10 +19,12 @@ void setup() {
 
   autocnt.begin();
 
+
 }
 
 void loop() {
  // ts.execute();
+ autocnt.loop();
 }
 
 //70702145

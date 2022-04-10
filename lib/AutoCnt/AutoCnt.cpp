@@ -1,5 +1,7 @@
 #include "Arduino.h"
 #include "AutoCnt.h"
+void handleRoot(AutoCnt* _t);
+
 
 AutoCnt::AutoCnt() {
 
@@ -11,11 +13,6 @@ AutoCnt::AutoCnt(String ssid) {
 
   this->_apIP = new IPAddress(APIP);
   this->_ssid = ssid;
-  //this->_dnss = new DNSServer();
-  //this->_server = new WiFiServer(80);
-
-  //this->_dnss->start(_DNS_PORT, "*", this->_apIP);
-  //this->_server->begin();
 
 }
 
@@ -26,8 +23,7 @@ AutoCnt::~AutoCnt(void) {
 
 void AutoCnt::begin(){
 
-     void (*handleRoot)(void) = this->_handleRoot;
-
+    //AutoCnt* _t = this;
     WiFi.mode(WIFI_OFF); //agrega a empezar con el wifi apagado, evitar estrellarse
     WiFi.mode(WIFI_AP);
 
@@ -37,11 +33,19 @@ void AutoCnt::begin(){
     this->_server = new WebServer(80);
 
     this->_dnss->start(_DNS_PORT, "*", *(this->_apIP));
-    this->_server->on("/", handleRoot);
+    this->_server->on("/", [this](){
+        this->_handleRoot();
+    });
     this->_server->begin();
 
 }
 
 void AutoCnt::_handleRoot(){
-  Serial.printf("%d\n", 3 );
+      this->_server->send(200, "text/plain", "hello from esp32!");
+}
+
+void AutoCnt::loop(){
+    while (1) {
+        this->_server->handleClient();
+    }
 }
