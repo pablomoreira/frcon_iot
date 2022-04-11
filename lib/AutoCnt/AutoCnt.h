@@ -22,6 +22,7 @@ class AutoCnt {
         WebServer* _server;
         String _ssid;
         void _handleRoot();
+        void _handleNotFound();
 
 
 
