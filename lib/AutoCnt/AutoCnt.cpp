@@ -30,34 +30,41 @@ void AutoCnt::begin(){
     WiFi.softAP(this->_ssid.c_str());
     WiFi.softAPConfig(*(this->_apIP),*(this->_apIP), IPAddress(255, 255, 255, 0));
     this->_dnss = new DNSServer();
-    this->_server = new WebServer(80);
+    this->_server = new Server(80);
 
     this->_dnss->start(_DNS_PORT, "*", *(this->_apIP));
-    this->_server->on("/", [this](){
-        this->_handleRoot();
-    });
-
-    this->_server->onNotFound([this](){
-        //this->_handleNotFound();
-        this->_handleRoot();
-    });
-    this->_server->on("/ScanWiFi",__Scan);
 
 
     this->_server->begin();
 
 }
 
-void AutoCnt::_handleRoot(){
-      String message = "<!DOCTYPE html>";
-      message += "<html lang=\"es\">";
-      message += "<head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\"> <title>Título del documento HTML</title> </head>";
-      message += "<body> <p>AutoCnt</p>";
-      message += "<p> <a href=\"ScanWiFi\"><button>Scan</button></a>";
-      message += "</body> </html>";
-      this->_server->send(200, "text/html", message);
+void AutoCnt::run() {
+    this->_dns->processNextRequest();
+    WiFiClient client = this->_server->available();   // escuchar para los clientes entrantes
 
-      Serial.printf("%s\n", this->_server->uri().c_str());
+    if (client) {
+      String currentLine = "";
+      while (client.connected()) {
+        if (client.available()) {
+          char c = client.read();
+          if (c == '\n') {
+            if (currentLine.length() == 0) {
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+              client.print(this->_responseHTML);
+              break;
+            } else {
+              currentLine = "";
+            }
+          } else if (c != '\r') {
+            currentLine += c;
+          }
+        }
+      }
+      client.stop();
+    }
 }
 
 // void AutoCnt::_handleNotFound() {
@@ -75,15 +82,7 @@ void AutoCnt::_handleRoot(){
 //   this->_server->send(404, "text/plain", message);
 // }
 //
-void AutoCnt::loop(){
-    while (1) {
-      this->_dnss->processNextRequest();
-      this->_server->handleClient();
 
-      delay(5);
-
-    }
-}
 
 void __Scan(){
   if (WiFi.getMode() == WIFI_OFF) WiFi.mode(WIFI_AP_STA);

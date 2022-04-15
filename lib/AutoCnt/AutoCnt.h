@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #include <DNSServer.h>
 #include <WiFi.h>
-#include <WebServer.h>
+#include <Server.h>
 
 
 class AutoCnt {
@@ -15,14 +15,14 @@ class AutoCnt {
         AutoCnt(String ssid);
         ~AutoCnt();
         void begin();
-        void loop();
+        void run();
     private:
         IPAddress* _apIP;
         DNSServer* _dnss;
-        WebServer* _server;
+        Server* _server;
         String _ssid;
-        void _handleRoot();
-        void _handleNotFound();
+
+
 
 
 

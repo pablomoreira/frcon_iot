@@ -16,15 +16,12 @@ Task autoConnect(8 * TASK_SECOND, TASK_FOREVER, &wifiScanCallback, &ts, true);
 void setup() {
   Serial.begin(115200);
   delay(10);
-
   autocnt.begin();
-
-
 }
 
 void loop() {
- // ts.execute();
- autocnt.loop();
+ delay(5);
+ autocnt.run();
 }
 
 //70702145
