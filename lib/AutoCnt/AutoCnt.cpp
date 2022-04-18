@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "AutoCnt.h"
 
+
 void __Scan();
 
 AutoCnt::AutoCnt() {
@@ -30,7 +31,7 @@ void AutoCnt::begin(){
     WiFi.softAP(this->_ssid.c_str());
     WiFi.softAPConfig(*(this->_apIP),*(this->_apIP), IPAddress(255, 255, 255, 0));
     this->_dnss = new DNSServer();
-    this->_server = new Server(80);
+    this->_server = new WiFiServer(80);
 
     this->_dnss->start(_DNS_PORT, "*", *(this->_apIP));
 
@@ -40,9 +41,8 @@ void AutoCnt::begin(){
 }
 
 void AutoCnt::run() {
-    this->_dns->processNextRequest();
+    this->_dnss->processNextRequest();
     WiFiClient client = this->_server->available();   // escuchar para los clientes entrantes
-
     if (client) {
       String currentLine = "";
       while (client.connected()) {
@@ -53,7 +53,13 @@ void AutoCnt::run() {
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
               client.println();
+              this->_responseHTML = _HEAD;
+              this->_responseHTML += _PRE_LIST;
+              this->_Scan();////////
+              this->_responseHTML += _POST_LIST;
+              this->_responseHTML += _END;
               client.print(this->_responseHTML);
+              this->_responseHTML ="";
               break;
             } else {
               currentLine = "";
@@ -64,6 +70,7 @@ void AutoCnt::run() {
         }
       }
       client.stop();
+      this->_responseHTML = _HEAD;
     }
 }
 
@@ -84,12 +91,16 @@ void AutoCnt::run() {
 //
 
 
-void __Scan(){
+void AutoCnt::_Scan(){
   if (WiFi.getMode() == WIFI_OFF) WiFi.mode(WIFI_AP_STA);
+  String _str_tmp;
   int n = WiFi.scanNetworks();
 
   for (int i = 0; i < n; i++){
     Serial.printf("%d %s %d %x\n",i,WiFi.SSID(i).c_str(),WiFi.RSSI(i),WiFi.encryptionType(i));
+    _str_tmp = (String(i) + " " + WiFi.SSID(i) + " " + WiFi.RSSI(i) + " " + WiFi.encryptionType(i));
+    _str_tmp = "<li>" + _str_tmp + "</li>";
+    this->_responseHTML += _str_tmp;
   }
   Serial.printf("---\n");
 }

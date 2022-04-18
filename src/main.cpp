@@ -4,6 +4,7 @@
 #include <Preferences.h>
 #include "AutoCnt.h"
 
+
 Scheduler ts;
 void autoConnectCallback();
 void wifiScanCallback();

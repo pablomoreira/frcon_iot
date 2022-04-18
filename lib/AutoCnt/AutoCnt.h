@@ -1,12 +1,13 @@
 #ifndef AutoCnt_h
 #define AutoCnt_h
 #include <portal.h>
+#include "html.h"
 
 
 #include <Arduino.h>
 #include <DNSServer.h>
 #include <WiFi.h>
-#include <Server.h>
+#include <WiFiServer.h>
 
 
 class AutoCnt {
@@ -19,14 +20,11 @@ class AutoCnt {
     private:
         IPAddress* _apIP;
         DNSServer* _dnss;
-        Server* _server;
+        WiFiServer* _server;
         String _ssid;
+        void _Scan();
+        String _responseHTML;
 
-
-
-
-
-        //String responseHTML = "<!DOCTYPE html><html><head><title>CaptivePortal</title></head><body><h1>Hello World!</h1><p>This is a captive portal example. All requests will be redirected here.</p></body></html>";
 
 };
 #endif
