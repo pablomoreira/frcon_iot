@@ -48,11 +48,13 @@ void AutoCnt::run() {
       while (client.connected()) {
         if (client.available()) {
           char c = client.read();
+          Serial.printf("%c",c );
           if (c == '\n') {
             if (currentLine.length() == 0) {
               client.println("HTTP/1.1 200 OK");
               client.println("Content-type:text/html");
-              client.println();
+
+
               this->_responseHTML = _HEAD;
               this->_responseHTML += _PRE_LIST;
               this->_Scan();////////
@@ -70,7 +72,6 @@ void AutoCnt::run() {
         }
       }
       client.stop();
-      this->_responseHTML = _HEAD;
     }
 }
 
