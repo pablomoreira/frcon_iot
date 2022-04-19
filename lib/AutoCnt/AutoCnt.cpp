@@ -48,7 +48,7 @@ void AutoCnt::run() {
       while (client.connected()) {
         if (client.available()) {
           char c = client.read();
-          Serial.printf("%c",c );
+
           if (c == '\n') {
             if (currentLine.length() == 0) {
               client.println("HTTP/1.1 200 OK");
@@ -57,20 +57,26 @@ void AutoCnt::run() {
 
               this->_responseHTML = _HEAD;
               this->_responseHTML += _PRE_LIST;
-              this->_Scan();////////
+              //this->_Scan();////////
               this->_responseHTML += _POST_LIST;
               this->_responseHTML += _END;
-              client.print(this->_responseHTML);
+              client.printf("%s\n",this->_responseHTML.c_str());
               this->_responseHTML ="";
               break;
-            } else {
+            }
+            else {
+              this->_responseHTML = _NOTFOUND;
+              client.printf("%s\n",this->_responseHTML.c_str());
+              Serial.printf("%s\n",currentLine.c_str());
               currentLine = "";
             }
-          } else if (c != '\r') {
+          }
+          else if (c != '\r') {
             currentLine += c;
           }
         }
       }
+
       client.stop();
     }
 }
