@@ -41,44 +41,37 @@ void AutoCnt::begin(){
 }
 
 void AutoCnt::run() {
-    this->_dnss->processNextRequest();
-    WiFiClient client = this->_server->available();   // escuchar para los clientes entrantes
-    if (client) {
-      String currentLine = "";
-      while (client.connected()) {
-        if (client.available()) {
-          char c = client.read();
+  this->_dnss->processNextRequest();
+  WiFiClient client = this->_server->available();   // escuchar para los clientes entrantes
 
-          if (c == '\n') {
-            if (currentLine.length() == 0) {
-              client.println("HTTP/1.1 200 OK");
-              client.println("Content-type:text/html");
+  if (client) {
+    String currentLine = "";
+    while (client.connected()) {
+      if (client.available()) {
+        char c = client.read();
+        if (c == '\n') {
 
-
-              this->_responseHTML = _HEAD;
-              this->_responseHTML += _PRE_LIST;
-              //this->_Scan();////////
-              this->_responseHTML += _POST_LIST;
-              this->_responseHTML += _END;
-              client.printf("%s\n",this->_responseHTML.c_str());
-              this->_responseHTML ="";
-              break;
-            }
-            else {
-              this->_responseHTML = _NOTFOUND;
-              client.printf("%s\n",this->_responseHTML.c_str());
-              Serial.printf("%s\n",currentLine.c_str());
-              currentLine = "";
-            }
+          if (currentLine.length() == 0) {
+            Serial.printf("%s",currentLine.c_str());
+            client.println("HTTP/1.1 200 OK");
+            client.println("Content-type:text/html");
+            this->_responseHTML = _HEAD;
+            this->_responseHTML += _PRE_LIST;
+            this->_Scan();////////
+            this->_responseHTML += _POST_LIST;
+            this->_responseHTML += _END;
+            client.printf("\n%s",this->_responseHTML.c_str());
+            break;
+          } else {
+            currentLine = "";
           }
-          else if (c != '\r') {
-            currentLine += c;
-          }
+        } else if (c != '\r') {
+          currentLine += c;
         }
       }
-
-      client.stop();
     }
+    client.stop();
+  }
 }
 
 // void AutoCnt::_handleNotFound() {
